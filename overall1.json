@@ -1,0 +1,1473 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "SalesLogix Event Store API",
+    "description": "",
+    "contact": {
+      "name": "William Jacques Smith",
+      "email": "WilliamJacques.Smith@investec.co.za"
+    },
+    "version": "v1"
+  },
+  "paths": {
+    "/api/v1/events": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Get a list of events from SalesLogix event store",
+        "description": "Event Types: \r\n* ClientCreated, ClientUpdated\r\n* RelationshipCreated, RelationshipUpdated",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "description": "The last event id retrieved",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "The number of events to retrieve",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          },
+          {
+            "name": "accountId",
+            "in": "query",
+            "description": "The SalesLogix AccountId",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "If data returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventModel"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "If no data returned"
+          },
+          "408": {
+            "description": "If the request timed out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/repositories/entity": {
+      "get": {
+        "tags": [
+          "Repositories"
+        ],
+        "summary": "Get entity structure",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Entity"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/repositories/relationsionship": {
+      "get": {
+        "tags": [
+          "Repositories"
+        ],
+        "summary": "Get relationship structure",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Relationsionship"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccountBusinessUnit": {
+        "type": "object",
+        "properties": {
+          "AccountBusinessUnitId": {
+            "type": "string",
+            "nullable": true
+          },
+          "BusinessUnit": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "IsActive": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountCoreSystem": {
+        "type": "object",
+        "properties": {
+          "AccountId": {
+            "type": "string",
+            "nullable": true
+          },
+          "SystemCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SystemName": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsActive": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsBlocked": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountProduct": {
+        "type": "object",
+        "properties": {
+          "AccountProductId": {
+            "type": "string",
+            "nullable": true
+          },
+          "Product": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "ExpiryDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "RTRRInvokeDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "ProductKey": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "AddressId": {
+            "type": "string",
+            "nullable": true
+          },
+          "Description": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "Address1": {
+            "type": "string",
+            "nullable": true
+          },
+          "Address2": {
+            "type": "string",
+            "nullable": true
+          },
+          "Address3": {
+            "type": "string",
+            "nullable": true
+          },
+          "City": {
+            "type": "string",
+            "nullable": true
+          },
+          "State": {
+            "type": "string",
+            "nullable": true
+          },
+          "PostalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "Country": {
+            "$ref": "#/components/schemas/CountryLookup"
+          },
+          "IsPrimary": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsMailing": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AuthorisedPerson": {
+        "type": "object",
+        "properties": {
+          "AccountId": {
+            "type": "string",
+            "nullable": true
+          },
+          "Consultant": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "BusinessUnit": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "Email": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsView": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsDeal": {
+            "type": "string",
+            "nullable": true
+          },
+          "FlexTradeMainFirmAccountId": {
+            "type": "string",
+            "nullable": true
+          },
+          "AuthorisedPersonLinkedClientPermissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuthorisedPersonLinkedClientPermission"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AuthorisedPersonLinkedClientPermission": {
+        "type": "object",
+        "properties": {
+          "AuthPersonLinkedClientPermissionsId": {
+            "type": "string",
+            "nullable": true
+          },
+          "System": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "LinkedClientAccountId": {
+            "type": "string",
+            "nullable": true
+          },
+          "IsActive": {
+            "type": "string",
+            "nullable": true
+          },
+          "FBCCCrossReference": {
+            "type": "string",
+            "nullable": true
+          },
+          "FBCCCrossReferenceModifyDate": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CountryLookup": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "maxLength": 12,
+            "minLength": 12,
+            "type": "string",
+            "description": "SalesLogix lookup id",
+            "nullable": true
+          },
+          "Text": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string",
+            "description": "Text value",
+            "nullable": true
+          },
+          "ERDId": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "description": "Pegasus referencec number (ERDId)",
+            "nullable": true
+          },
+          "ISOCode": {
+            "type": "string",
+            "description": "ISO 3166-1 alpha-2 code",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CountryOfCitizenship": {
+        "type": "object",
+        "properties": {
+          "CountryOfCitizenshipId": {
+            "type": "string",
+            "nullable": true
+          },
+          "Country": {
+            "$ref": "#/components/schemas/CountryLookup"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CrossReference": {
+        "type": "object",
+        "properties": {
+          "AccountId": {
+            "type": "string",
+            "nullable": true
+          },
+          "CrossReferenceId": {
+            "type": "string",
+            "nullable": true
+          },
+          "SystemCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "SystemName": {
+            "type": "string",
+            "nullable": true
+          },
+          "SSOProfile": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Entity": {
+        "required": [
+          "Account",
+          "AccountId",
+          "Disposed_Flg",
+          "Status",
+          "Type"
+        ],
+        "type": "object",
+        "properties": {
+          "AccountId": {
+            "maxLength": 12,
+            "minLength": 12,
+            "type": "string",
+            "description": "Primary risk entity identifier for a client / related party"
+          },
+          "Account": {
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string",
+            "description": "The name of the risk entity"
+          },
+          "TradingAs": {
+            "maxLength": 128,
+            "type": "string",
+            "description": "The Trading As name of the risk entity",
+            "nullable": true
+          },
+          "RegisteredName": {
+            "maxLength": 128,
+            "type": "string",
+            "description": "The registered name of the risk entity.",
+            "nullable": true
+          },
+          "ParentAccountId": {
+            "maxLength": 12,
+            "minLength": 0,
+            "type": "string",
+            "description": "If the entity is linked to a parent child relationship, the ParentId will contain the AccountId of this enity",
+            "nullable": true
+          },
+          "HeadOfficeAccountId": {
+            "maxLength": 12,
+            "minLength": 0,
+            "type": "string",
+            "description": "If the entity belongs to a headoffice, HeadOfficeId will contain the AccountId of this enity",
+            "nullable": true
+          },
+          "Status": {
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string",
+            "description": "The risk entity status. KYC Compliant, Closed, Blocked"
+          },
+          "Type": {
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string",
+            "description": "The type of entity. e.g. Main Entity, Related Party"
+          },
+          "Disposed_Flg": {
+            "maxLength": 12,
+            "minLength": 1,
+            "type": "string",
+            "description": "Identity and execute the disposal of client record"
+          },
+          "IFBFBCCFields": {
+            "$ref": "#/components/schemas/IFBFBCCFields"
+          },
+          "RegistrationNumber": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string",
+            "description": "Registration number",
+            "nullable": true
+          },
+          "TaxNumber": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string",
+            "description": "Tax number",
+            "nullable": true
+          },
+          "SAVatNumber": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string",
+            "description": "VAT registration number in South Africa",
+            "nullable": true
+          },
+          "ExtendedStatus": {
+            "maxLength": 128,
+            "minLength": 0,
+            "type": "string",
+            "description": "Pegasus extended status",
+            "nullable": true
+          },
+          "RegulatoryClassification": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "RegulatoryClassificationLocalForeign": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "Activity": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "ComProdServ": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "ActivityJurisdictionCountry": {
+            "$ref": "#/components/schemas/CountryLookup"
+          },
+          "OriginatingJurisdictionCountry": {
+            "$ref": "#/components/schemas/CountryLookup"
+          },
+          "SARBInstitutionalClassification": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "ComplianceEmail": {
+            "type": "string",
+            "description": "Compliance Email",
+            "format": "email",
+            "nullable": true
+          },
+          "RelationshipType": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "AgentType": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "DoesBranchInheritFromParent": {
+            "type": "string",
+            "description": "Does branch inherit from parent",
+            "nullable": true
+          },
+          "RelationshipIntroduced": {
+            "type": "string",
+            "description": "Relationship Introduced",
+            "nullable": true
+          },
+          "RelationshipManager": {
+            "type": "string",
+            "description": "Relationship Manager",
+            "nullable": true
+          },
+          "NetAssetValueCurrency": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "NetAssetValue": {
+            "type": "string",
+            "description": "Net Asset Value",
+            "nullable": true
+          },
+          "ListedOnExchange": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "JurisdictionOfExchangeCountry": {
+            "$ref": "#/components/schemas/CountryLookup"
+          },
+          "FICAException": {
+            "type": "string",
+            "description": "FICA Exception",
+            "nullable": true
+          },
+          "FICAExceptionReason": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "FICAExceptionOtherReason": {
+            "type": "string",
+            "description": "FICA Exception other description",
+            "format": "multiline",
+            "nullable": true
+          },
+          "FICAExceptionResolutionDate": {
+            "type": "string",
+            "description": "FICA Exception resolution date",
+            "nullable": true
+          },
+          "LastFicaDate": {
+            "type": "string",
+            "description": "Last Fica Date",
+            "nullable": true
+          },
+          "NextFicaDate": {
+            "type": "string",
+            "description": "Next Fica Date",
+            "nullable": true
+          },
+          "SICCode": {
+            "$ref": "#/components/schemas/SICCodeLookup"
+          },
+          "OCCCode": {
+            "$ref": "#/components/schemas/OCCCodeLookup"
+          },
+          "ResidencyStatus": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "EmploymentStatus": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "IncomeGeneration": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "PurposeOfTheAccount": {
+            "type": "string",
+            "description": "Purpose of the account",
+            "nullable": true
+          },
+          "AccountTurnover": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "VolumeOfTransactions": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "LoanDrawdownsToTheAccountHolderOnly": {
+            "type": "string",
+            "description": "Loan drawdowns to the account holder only",
+            "nullable": true
+          },
+          "LoanDrawdownsToTheAccountHolderOnlyDetail": {
+            "type": "string",
+            "description": "Loan drawdowns to the account holder only detail",
+            "nullable": true
+          },
+          "LoanOrFacilityServicedByAnyThirdParties": {
+            "type": "string",
+            "description": "Loan Or Facility Serviced By Any Third Parties",
+            "nullable": true
+          },
+          "LoanOrFacilityServicedByAnyThirdPartiesDetail": {
+            "type": "string",
+            "description": "Loan Or Facility Serviced by any third parties detail",
+            "nullable": true
+          },
+          "DomesticEftsOnly": {
+            "type": "string",
+            "description": "Domestic EFTs only",
+            "nullable": true
+          },
+          "CrossBorderPayments": {
+            "type": "string",
+            "description": "Cross Border Payments",
+            "nullable": true
+          },
+          "SelfCertProvided": {
+            "type": "string",
+            "description": "Self Cert Provided",
+            "nullable": true
+          },
+          "USPerson": {
+            "type": "string",
+            "description": "US Person",
+            "nullable": true
+          },
+          "ClientDeclaredTaxCountry": {
+            "type": "string",
+            "description": "Client Declared TaxCountry",
+            "nullable": true
+          },
+          "ReasonIfNoTaxCountry": {
+            "type": "string",
+            "description": "Reason If No Tax Country",
+            "nullable": true
+          },
+          "IsFinancialInstitution": {
+            "type": "string",
+            "description": "Is Financial Institution",
+            "nullable": true
+          },
+          "FinancialInstitutionType": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "DualEntityType": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "DualEntityName": {
+            "type": "string",
+            "description": "Dual Entity Name",
+            "nullable": true
+          },
+          "DualEntityGIIN": {
+            "type": "string",
+            "description": "Dual Entity GIIN",
+            "nullable": true
+          },
+          "NonFinancialEntityType": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "GIINNumber": {
+            "type": "string",
+            "description": "GIIN Number",
+            "nullable": true
+          },
+          "GIINType": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "ReasonIfNoGIIN": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "ReasonIfNoSelfCert": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "DoesAMBFDoOwnFATCAorCRS": {
+            "type": "string",
+            "description": "Does Account Managed by Fund Manager Do Own FATCA or CRS",
+            "nullable": true
+          },
+          "ControlledByEntityOnExchange": {
+            "type": "string",
+            "description": "Controlled By Entity On Exchange",
+            "nullable": true
+          },
+          "NameOfControlledExchange": {
+            "type": "string",
+            "description": "Name Of Controlled Exchange",
+            "nullable": true
+          },
+          "AMBFMGIIN": {
+            "type": "string",
+            "description": "Account Managed by Fund Manager GIIN",
+            "nullable": true
+          },
+          "FSPNumber": {
+            "type": "string",
+            "description": "FSP Number",
+            "nullable": true
+          },
+          "FundManagerTier": {
+            "type": "string",
+            "description": "Fund Manager Tier",
+            "nullable": true
+          },
+          "OriginatingChannel": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "ServicingChannel": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "HighRiskFactor": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "BusinessArea": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "SwiftNumber": {
+            "type": "string",
+            "description": "Swift Number",
+            "nullable": true
+          },
+          "IsIndividual": {
+            "type": "string",
+            "description": "Is Individual",
+            "nullable": true
+          },
+          "IsAuthorisedUser": {
+            "type": "string",
+            "description": "Is Authorised User",
+            "nullable": true
+          },
+          "IndividualDetails": {
+            "$ref": "#/components/schemas/Individual"
+          },
+          "ClientScreeningHitOutcome": {
+            "type": "string",
+            "description": "Client Screening",
+            "nullable": true
+          },
+          "ClientScreeningSignOffOutcome": {
+            "type": "string",
+            "description": "Client Screening SignOff",
+            "nullable": true
+          },
+          "RiskRatingHitOutcome": {
+            "type": "string",
+            "description": "Risk Rating",
+            "nullable": true
+          },
+          "RiskRatingSignOffOutcome": {
+            "type": "string",
+            "description": "Risk Rating SignOff Outcome",
+            "nullable": true
+          },
+          "AuthorisedPersonDetails": {
+            "$ref": "#/components/schemas/AuthorisedPerson"
+          },
+          "AddressDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Address"
+            },
+            "description": "Address Details",
+            "nullable": true
+          },
+          "PhoneDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PhoneNumber"
+            },
+            "description": "Phone Details",
+            "nullable": true
+          },
+          "Passports": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Passport"
+            },
+            "description": "Passports",
+            "nullable": true
+          },
+          "TaxObligations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TaxObligation"
+            },
+            "description": "Tax Obligations",
+            "nullable": true
+          },
+          "Products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountProduct"
+            },
+            "description": "Products",
+            "nullable": true
+          },
+          "BusinessUnits": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountBusinessUnit"
+            },
+            "description": "Business Units",
+            "nullable": true
+          },
+          "CountriesOfCitizenship": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CountryOfCitizenship"
+            },
+            "description": "Countries Of Citizenship",
+            "nullable": true
+          },
+          "SourceOfIncome": {
+            "type": "string",
+            "description": "Source Of Income",
+            "nullable": true
+          },
+          "SourceOfIncomeList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SourceOfIncomeDetails"
+            },
+            "description": "Source Of Income",
+            "nullable": true
+          },
+          "SourceOfIncomeOther": {
+            "type": "string",
+            "description": "Source Of Income Other",
+            "nullable": true
+          },
+          "SourceOfWealthList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SourceOfWealthDetails"
+            },
+            "description": "Source Of Wealth",
+            "nullable": true
+          },
+          "SourceOfWealthOther": {
+            "type": "string",
+            "description": "Source Of Wealth Other",
+            "nullable": true
+          },
+          "FICAACrossCurrencyList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FICAACrossCurrency"
+            },
+            "description": "FICAA Cross Currencies",
+            "nullable": true
+          },
+          "FICAAJurisdictionInboundFundList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FICAAJurisdictionInboundFund"
+            },
+            "description": "FICAA Jurisdiction Inbound Funds",
+            "nullable": true
+          },
+          "FICAAJurisdictionOutboundFundList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FICAAJurisdictionOutboundFund"
+            },
+            "description": "FICAA Jurisdiction Outbound Funds",
+            "nullable": true
+          },
+          "CrossReferenceList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CrossReference"
+            },
+            "description": "Cross References / Aliases of other systems. This links the entity to all other systems in the bank.",
+            "nullable": true
+          },
+          "CoreSystemList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountCoreSystem"
+            },
+            "description": "Core systems that the entity is linked to.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Event": {
+        "required": [
+          "Data",
+          "Id",
+          "Name",
+          "Source",
+          "Time",
+          "Version"
+        ],
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "integer",
+            "description": "Unique event id",
+            "format": "int32"
+          },
+          "Source": {
+            "type": "string",
+            "description": "Source where event originatated from"
+          },
+          "Name": {
+            "type": "string",
+            "description": "Name of the event e.g ClientCreated, ClientUpdated, RelationshipCreated, RelationshipUpdated"
+          },
+          "Version": {
+            "type": "string",
+            "description": "Version of the json message"
+          },
+          "Time": {
+            "type": "string",
+            "description": "Date and time of when the event occurred",
+            "format": "date-time"
+          },
+          "Data": {
+            "description": "Event data as per the source Entity or Relationship"
+          }
+        },
+        "additionalProperties": false,
+        "description": ""
+      },
+      "EventModel": {
+        "type": "object",
+        "properties": {
+          "Events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Event"
+            },
+            "description": "0, 1 or many events",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FICAACrossCurrency": {
+        "type": "object",
+        "properties": {
+          "AccountFICAACrossCurrencyId": {
+            "type": "string",
+            "nullable": true
+          },
+          "CrossCurrency": {
+            "$ref": "#/components/schemas/Lookup"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FICAAJurisdictionInboundFund": {
+        "type": "object",
+        "properties": {
+          "AccountFICAAJurisdictionInboundFundsId": {
+            "type": "string",
+            "nullable": true
+          },
+          "JurisdictionCountry": {
+            "$ref": "#/components/schemas/CountryLookup"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FICAAJurisdictionOutboundFund": {
+        "type": "object",
+        "properties": {
+          "AccountFICAAJurisdictionOutboundFundsId": {
+            "type": "string",
+            "nullable": true
+          },
+          "JurisdictionCountry": {
+            "$ref": "#/components/schemas/CountryLookup"
+          }
+        },
+        "additionalProperties": false
+      },
+      "IFBFBCCFields": {
+        "type": "object",
+        "properties": {
+          "companyAbbreviatedName": {
+            "maxLength": 12,
+            "minLength": 1,
+            "type": "string",
+            "description": "Company Abbreviated Name value for Non-Individual (Entity)",
+            "nullable": true
+          },
+          "loginName": {
+            "maxLength": 12,
+            "minLength": 1,
+            "type": "string",
+            "description": "Login Name for Individual (User)",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Indicium": {
+        "type": "object",
+        "properties": {
+          "TaxObligationId": {
+            "type": "string",
+            "nullable": true
+          },
+          "IndiciaId": {
+            "type": "string",
+            "nullable": true
+          },
+          "IndiciaReason": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "EntityCuredOutcome": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "Comments": {
+            "type": "string",
+            "nullable": true
+          },
+          "LastUpdatedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "LastUpdatedDate": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Individual": {
+        "type": "object",
+        "properties": {
+          "Prefix": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "FirstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "MiddleName": {
+            "type": "string",
+            "nullable": true
+          },
+          "LastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "DateOfBirth": {
+            "type": "string",
+            "nullable": true
+          },
+          "IDNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "TemporaryResidencePermitNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "TemporaryResidenceExpiryDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "TemporaryResidenceType": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "TaxNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "Gender": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "Race": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "CountryOfBirth": {
+            "$ref": "#/components/schemas/CountryLookup"
+          },
+          "FormerCountryOfBirth": {
+            "type": "string",
+            "nullable": true
+          },
+          "TownOfBirth": {
+            "$ref": "#/components/schemas/Lookup"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Lookup": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "maxLength": 12,
+            "minLength": 12,
+            "type": "string",
+            "description": "SalesLogix lookup id",
+            "nullable": true
+          },
+          "Text": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string",
+            "description": "Text value",
+            "nullable": true
+          },
+          "ERDId": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "description": "Pegasus referencec number (ERDId)",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "OCCCodeLookup": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "ERDId": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level1Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level1Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level2Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level2Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level3Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level3Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level4Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level4Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Passport": {
+        "type": "object",
+        "properties": {
+          "PassportId": {
+            "type": "string",
+            "nullable": true
+          },
+          "PassportNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "PassportCountry": {
+            "$ref": "#/components/schemas/CountryLookup"
+          },
+          "PassportExpiryDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "Indefinate": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PhoneNumber": {
+        "type": "object",
+        "properties": {
+          "Description": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "Number": {
+            "type": "string",
+            "nullable": true
+          },
+          "Country": {
+            "$ref": "#/components/schemas/CountryLookup"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": { }
+      },
+      "RelatedParty": {
+        "type": "object",
+        "properties": {
+          "ChildAccountId": {
+            "maxLength": 12,
+            "minLength": 12,
+            "type": "string",
+            "description": "Related party's SalesLogix AccountId",
+            "nullable": true
+          },
+          "ChildAccountName": {
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string",
+            "description": "Name of the related party",
+            "nullable": true
+          },
+          "RelationshipType": {
+            "$ref": "#/components/schemas/RelationshipType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RelationshipType": {
+        "required": [
+          "IsActive"
+        ],
+        "type": "object",
+        "properties": {
+          "IsActive": {
+            "type": "string",
+            "description": "Indicates if the relationship is active TRUE / FALSE"
+          },
+          "RelationshipTypeId": {
+            "maxLength": 12,
+            "minLength": 12,
+            "type": "string",
+            "description": "SalesLogix lookup id",
+            "nullable": true
+          },
+          "RelationshipTypeValue": {
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string",
+            "description": "Text value",
+            "nullable": true
+          },
+          "RelationshipTypeErdId": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "description": "Pegasus referencec number (ERDId)",
+            "nullable": true
+          },
+          "ShareholderPercentage": {
+            "type": "number",
+            "description": "% of shares held by shareholder",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Relationsionship": {
+        "type": "object",
+        "properties": {
+          "ParentAccountId": {
+            "maxLength": 12,
+            "minLength": 12,
+            "type": "string",
+            "description": "Parent SalesLogix AccountId",
+            "nullable": true
+          },
+          "ParentAccountName": {
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string",
+            "description": "Name of the parent entity",
+            "nullable": true
+          },
+          "RelatedParties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RelatedParty"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SICCodeLookup": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "nullable": true
+          },
+          "ERDId": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level1Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level1Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level2Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level2Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level3Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level3Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level4Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level4Description": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level5Code": {
+            "type": "string",
+            "nullable": true
+          },
+          "Level5Description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SourceOfIncomeDetails": {
+        "type": "object",
+        "properties": {
+          "AccountSourceOfIncomeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "SourceOfIncome": {
+            "$ref": "#/components/schemas/Lookup"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SourceOfWealthDetails": {
+        "type": "object",
+        "properties": {
+          "AccountSourceOfWealthId": {
+            "type": "string",
+            "nullable": true
+          },
+          "SourceOfWealth": {
+            "$ref": "#/components/schemas/Lookup"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TaxObligation": {
+        "type": "object",
+        "properties": {
+          "TaxObligationId": {
+            "type": "string",
+            "nullable": true
+          },
+          "TINJurisdictionCountry": {
+            "$ref": "#/components/schemas/CountryLookup"
+          },
+          "TINnumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReasonIfNoTINNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "IGA_FATCA_TaxClassification": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "CRS_TaxClassification": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "IndiciaDocumentedUndocumented": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "UndocumentedReason": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "ComplianceIndicator": {
+            "type": "string",
+            "nullable": true
+          },
+          "ComplianceIndicatorReason": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "CuredIndicator": {
+            "type": "string",
+            "nullable": true
+          },
+          "CuredDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "ReportableIndicator": {
+            "type": "string",
+            "nullable": true
+          },
+          "AcceptedIGA_FATCA_TaxCategory": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "AcceptedCRSTaxCategory": {
+            "$ref": "#/components/schemas/Lookup"
+          },
+          "Indicia": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Indicium"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
